@@ -7,8 +7,8 @@ require 'owl/version'
 Gem::Specification.new do |gem|
   gem.name          = "owl"
   gem.version       = Owl::VERSION
-  gem.summary       = %q{TODO: Summary}
-  gem.description   = %q{TODO: Description}
+  gem.summary       = %q{Summary}
+  gem.description   = %q{Description}
   gem.license       = "MIT"
   gem.authors       = ["vladislav"]
   gem.email         = "v.yashin.work@gmail.com"
