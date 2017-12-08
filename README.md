@@ -1,9 +1,5 @@
 # owl
 
-* [Homepage](https://rubygems.org/gems/owl)
-* [Documentation](http://rubydoc.info/gems/owl/frames)
-* [Email](mailto:v.yashin.work at gmail.com)
-
 ## Description
 
 TODO: Description
