@@ -44,10 +44,21 @@ module Utils
     def yes_no_html(is_something)
       (is_something ? '<i class="glyphicon glyphicon-ok" style="color: green;"></i> Да' : '<i class="glyphicon glyphicon-remove" style="color: red;"></i> Нет').html_safe
     end
- 
+
     # Хелпер, возвращающий ту же строку, если она не пустая, либо заглушку, переданную в параметре dummy
     def string_or_dummy(str, dummy = '')
       str.present? ? str : dummy.html_safe
+    end
+
+    def browser_updater_block
+      result = <<-HTML
+        <script src="https://yastatic.net/browser-updater/v1/script.js" charset="utf-8"></script>
+        <script>
+          var yaBrowserUpdater = new ya.browserUpdater.init({"lang":"ru","browsers":
+          <%= Owl::BROWSERS.to_json %>,"theme":"yellow"});
+        </script>
+      HTML
+      result.html_safe
     end
   end
 end
