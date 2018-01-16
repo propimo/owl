@@ -55,7 +55,7 @@ module Utils
         <script src="https://yastatic.net/browser-updater/v1/script.js" charset="utf-8"></script>
         <script>
           var yaBrowserUpdater = new ya.browserUpdater.init({"lang":"ru","browsers":
-          <%= Owl::BROWSERS.to_json %>,"theme":"yellow"});
+          #{Owl::BROWSERS.to_json},"theme":"yellow"});
         </script>
       HTML
       result.html_safe
