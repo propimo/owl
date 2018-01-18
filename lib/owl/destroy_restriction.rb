@@ -8,7 +8,7 @@ module DestroyRestriction
     # @param [Proc, Symbol] if
     # @param [String, Symbol] attribute название атрибута, который будет добавлен в ошибки вместе с сообщением
     # @param [String, Proc] message сообщение, которое будет добавлено в ошибки (строка, либо лямбда, которая будет выполнена в контексте экземпляра класса)
-    def restricts_destroy(if:, attribute: '', message: 'Невозможно удалить объект')
+    def restricts_destroy(if: -> { true }, attribute: '', message: 'Невозможно удалить объект')
       condition_callback = binding.local_variable_get(:if)
       self.destroy_restrictions ||= []
       self.destroy_restrictions << { condition: condition_callback.to_proc, message: message }
