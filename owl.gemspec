@@ -31,6 +31,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency     'rails', '~> 5.1'
   gem.add_runtime_dependency     'browser', '>= 2.4.0'
+  gem.add_runtime_dependency     'breadcrumbs_on_rails', '~> 3.0'
 
   gem.add_development_dependency 'bundler', '~> 1.10'
   gem.add_development_dependency 'rake', '~> 10.0'
