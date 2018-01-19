@@ -23,12 +23,11 @@ class Settings
   # @param [String, Symbol] key
   # @param [Object] value
   def []=(key, value)
-    key_exists = !!self[key]
     quoted_key = @connection.quote(key)
     quoted_value = @connection.quote(value.to_yaml)
 
     query =
-      if key_exists
+      if key_exists?(key)
         <<-SQL
           UPDATE #{@table} SET value = #{quoted_value} WHERE #{@table}.key = #{quoted_key}
         SQL
@@ -54,4 +53,15 @@ class Settings
     result = @connection.execute(query).to_a
     result.map { |setting| { setting['key'] => YAML.load(setting['value']) } }.reduce(:merge).with_indifferent_access
   end
+
+  private
+    def key_exists?(key)
+      quoted_key = @connection.quote(key)
+
+      query = <<-SQL
+        SELECT TRUE FROM settings WHERE key = #{quoted_key}
+      SQL
+
+      !!@connection.execute(query).to_a.first
+    end
 end
