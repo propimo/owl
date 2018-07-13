@@ -19,6 +19,11 @@ class LoggerWithNotifications < Logger
     super(progname, &block)
   end
 
+  def info(progname = nil, silent = true, &block)
+    notify(progname, title: 'Info') unless silent
+    super(progname, &block)
+  end
+
   private
     def notify(message, title: '')
       @notifier.ping("*#{title}*", attachments: [{ text: message.kind_of?(Exception) ? "*#{message.inspect}* ```#{message.backtrace.join("\n").gsub("`", "'")}```" : message.to_s, mrkdwn_in: %w(text) }])
