@@ -4,7 +4,16 @@ class Location
   EARTH_RADIUS = 6371
 
   def initialize(latitude, longitude)
-    @longitude, @latitude = longitude.to_f, latitude.to_f
+    if latitude.nil? ||
+       longitude.nil? ||
+       latitude < -90 ||
+       latitude > 90 ||
+       longitude < -180 ||
+       longitude > 180
+      raise ArgumentError.new("Invalid latitude/longitude values")
+    else
+      @longitude, @latitude = longitude.to_f, latitude.to_f
+    end
   end
 
   def distance_to(other_location)
