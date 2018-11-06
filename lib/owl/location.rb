@@ -6,10 +6,10 @@ class Location
   def initialize(latitude, longitude)
     if latitude.nil? ||
        longitude.nil? ||
-       latitude < -90 ||
-       latitude > 90 ||
-       longitude < -180 ||
-       longitude > 180
+       latitude.to_f < -90 ||
+       latitude.to_f > 90 ||
+       longitude.to_f < -180 ||
+       longitude.to_f > 180
       raise ArgumentError.new("Invalid latitude/longitude values")
     else
       @longitude, @latitude = longitude.to_f, latitude.to_f
