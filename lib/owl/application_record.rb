@@ -31,4 +31,19 @@ class ApplicationRecord < ActiveRecord::Base
         model_class.attribute_names.map(&:to_sym) + [nested_attributes] - [:created_at, :updated_at]
       end
   end
+
+  # Получить список пар атрибутов экземпляра модели
+  # @param [Array<Symbol>] exclude список имен атрибутов экземпляра модели, которые следует исключить из выборки
+  # @return [Hash<String, Object>]
+  def attributes_sanitized(exclude: %i[id created_at updated_at])
+    excluded_attributes = exclude.map(&:to_s)
+    filter = proc { |attr_name| attr_name.in?(excluded_attributes) }
+
+    attributes
+      .slice(*self
+                .class
+                .attribute_names
+                .reject(&filter)
+    )
+  end
 end
