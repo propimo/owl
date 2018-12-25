@@ -9,6 +9,7 @@ class Pagination
   # @param items [ActiveRecord::Relation, Array] коллекция элементов для пагинации
   # @option options [Integer] :page_size  размер страницы
   # @option options [Integer] :current_page  номер текущей страницы
+  # @option options [Integer] :items_count  общее количество элементов для пагинации
   # @yieldparam [Pagination] pagination передаёт саму себя в переданный блок
   # @example Создание пагинации
   #   pagination = Pagination.new(Book.all, current_page: 3, page_size: 20)
@@ -20,8 +21,8 @@ class Pagination
     @page_size ||= DEFAULT_PAGE_SIZE
     @current_page = 1 if @current_page.blank? || @current_page == 0
 
-    items_count = items.size
-    @pages_count = (items_count % @page_size == 0) ? items_count / @page_size : (items_count / @page_size) + 1
+    @items_count = items.size if @items_count.blank?
+    @pages_count = (@items_count % @page_size == 0) ? @items_count / @page_size : (@items_count / @page_size) + 1
     if items.respond_to? :limit
       @items = items.limit(@page_size).offset(@page_size * (@current_page - 1))
     elsif items.respond_to? :[]
