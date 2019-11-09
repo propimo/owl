@@ -60,5 +60,38 @@ module Utils
       HTML
       result.html_safe
     end
+
+    # Генерируется случайную анимированную font awesome иконку загрузки
+    def font_awesome_random_loader(style: '')
+      spin_animation_type = %w(fa-spin
+                               fa-pulse).sample
+
+      slip_type = %w(fa-asterisk
+                     fa-atom
+                     fa-certificate
+                     fa-circle-notch
+                     fa-cog
+                     fa-compact-disc
+                     fa-compass
+                     fa-crosshairs
+                     fa-dharmachakra
+                     fa-fan
+                     fa-haykal
+                     fa-life-ring
+                     fa-palette
+                     fa-ring
+                     fa-slash
+                     fa-snowflake
+                     fa-spinner
+                     fa-stroopwafel
+                     fa-sun
+                     fa-sync
+                     fa-sync-alt
+                     fa-yin-yang).sample
+
+      icon_style = style.present? ? "style='#{style}'" : ''
+
+      "<i class='fas #{slip_type} #{spin_animation_type}' #{icon_style}></i>".html_safe
+    end
   end
 end
