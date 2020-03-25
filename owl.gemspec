@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
-  gem.add_runtime_dependency     'rails', '~> 5.1'
+  gem.add_runtime_dependency     'rails', '>= 5.1'
   gem.add_runtime_dependency     'browser', '>= 2.4.0'
   gem.add_runtime_dependency     'breadcrumbs_on_rails', '~> 3.0'
   gem.add_runtime_dependency     'i18n', '>= 0.7'
