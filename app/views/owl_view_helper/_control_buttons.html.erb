@@ -1,0 +1,28 @@
+<%
+  show_obj_path ||= ''
+  hide_show_btn ||= false
+%>
+
+<div class="actions">
+  <%= form.submit t('common.save'),
+                  class: "btn btn-primary",
+                  data: { disable_with: t('common.saving') }
+  %>
+
+  <% unless obj.new_record? || hide_show_btn %>
+    <%= link_to t('common.show'),
+                show_obj_path.present? ? show_obj_path : obj,
+                class: "btn btn-primary"
+    %>
+  <% end %>
+
+  <% unless obj.new_record? %>
+    <%= link_to t('common.delete'),
+                obj,
+                method: :delete,
+                class: 'btn btn-danger',
+                data: { confirm: confirm_message },
+                title: t('common.delete')
+    %>
+  <% end %>
+</div>
