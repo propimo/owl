@@ -5,6 +5,16 @@ Use `bundle config local.GEM_NAME /path/to/local/git/repository` to load the lat
 
 To remove the changes, you need to run `bundle config --delete local.GEM_NAME`
 
+## GemResolver Usage
+1. Run installer `rails generate webpack_with_gems:install`
+2. Add gems name and paths to their assets, inside `webpacker.yml`
+
+Example: 
+```
+resolved_gems:
+    owl:
+      - 'app/assets/'
+```
 
 ## Description
 

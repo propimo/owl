@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Резолвит гемы и пути в соответсии с webpacker,yml
+# Для того чтобы путь к ассетам гем был добавлен в общий конфиг необходимо добавить ключ с названием гема в
+# +resolved_gems:+ а в значении этого ключа массив ассетов
+# @example
+# resolved_gems:
+#     owl:
+#       - 'app/assets/'
+
+require 'json'
+require 'yaml'
+require 'webpacker'
+
+ENV["RAILS_ENV"] ||= ENV["RACK_ENV"] || "development"
+
+config = YAML.load(File.open('config/webpacker.yml').read)
+
+gems_to_resolve = config.dig(ENV["RAILS_ENV"], 'resolved_gems')
+
+def resolve_gem_path(gem)
+  return if gem.blank?
+  gem_path = Gem.loaded_specs[gem]&.full_gem_path
+  if gem_path.present?
+    gem_path
+  else
+    abort("Gem '#{gem}' not found, please check webpacker config")
+  end
+end
+
+def resolve_gems(config)
+  config.reduce([]) do |result, (gem_name, paths_to_assets)|
+    gem_full_path = resolve_gem_path(gem_name)
+    next if gem_full_path.blank?
+
+    paths_to_assets.each do |path_to_assets|
+      last_folder_name = File.basename(path_to_assets)
+      entry_key_name = "#{gem_name}/#{last_folder_name}"
+
+      full_asset_path = File.expand_path(path_to_assets, gem_full_path)
+
+      unless Dir.exist?(full_asset_path)
+        abort("Dir #{full_asset_path} not found")
+      end
+
+      result.push({ gem_name: entry_key_name, gem_path: full_asset_path })
+    end
+    result
+  end
+end
+
+p JSON.dump(gems: resolve_gems(gems_to_resolve))
