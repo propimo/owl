@@ -1,0 +1,34 @@
+<%
+  show_obj_path ||= ''
+  hide_show_btn ||= false
+  hide_delete_btn ||= false
+  confirm_message ||= ''
+%>
+
+<div class="<%= button_opts[:group_btns] %>" style="min-width: 115px;">
+  <% unless hide_show_btn %>
+    <%= link_to show_icon_tag,
+                show_obj_path.present? ? show_obj_path : obj,
+                class: button_opts[:show_btn_class],
+                title: t('common.show')
+    %>
+  <% end %>
+
+  <% if edit_obj_path.present? %>
+    <%= link_to edit_icon_tag,
+                edit_obj_path,
+                class: button_opts[:edit_btn_class],
+                title: t('common.edit')
+    %>
+  <% end %>
+
+  <% if confirm_message.present? && !hide_delete_btn %>
+    <%= link_to remove_icon_tag,
+                obj,
+                class: button_opts[:remove_btn_class],
+                data: { confirm: confirm_message,
+                        method: :delete },
+                title: t('common.delete')
+    %>
+  <% end %>
+</div>

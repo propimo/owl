@@ -1,3 +1,5 @@
+require 'owl/active_record_controller/hooks'
+
 # Базовый класс для контроллера для ActiveRecord модели
 # - предоставляет базовые экшены CRUD для контроллеров:
 # index, show, new, edit, create, update, destroy,
@@ -18,6 +20,7 @@
 module ActiveRecordController
   module Base
     extend ActiveSupport::Concern
+    include ActiveRecordController::Hooks
 
     included do
       class_attribute :resource_name
@@ -36,7 +39,7 @@ module ActiveRecordController
         # show (+ show_hook),
         # new (+ new_hook),
         # edit (+ edit_hook),
-        # create,
+        # create (+ create_hook),
         # update,
         # destroy
         # @param attrs [Array<Symbol>] список экшенов, которые необходимо предоставить
@@ -68,9 +71,7 @@ module ActiveRecordController
           # Хук для страницы индекса
           # Устанавливает хлебную крошку страницы индекса и заголовок страницы по-умолчанию
           define_method(:index_hook) do
-            add_breadcrumb t(:index, scope: plural_resource_name), :"#{plural_resource_name}_path"
-
-            @page_title = t(:index, scope: plural_resource_name)
+            default_index_hook
           end
         end
 
@@ -92,7 +93,7 @@ module ActiveRecordController
           # Хук для страницы просмотра
           # Устанавливает хлебную крошку страницы индекса по-умолчанию
           define_method(:show_hook) do
-            add_breadcrumb t(:index, scope: plural_resource_name), :"#{plural_resource_name}_path"
+            default_show_hook
           end
         end
 
@@ -116,10 +117,7 @@ module ActiveRecordController
           # Хук для страницы создания сущности
           # Устанавливает хлебную крошку страницы индекса, страницы создания и заголовок страницы по-умолчанию
           define_method(:new_hook) do
-            add_breadcrumb t(:index, scope: plural_resource_name), :"#{plural_resource_name}_path"
-            add_breadcrumb t(:new, scope: plural_resource_name)
-
-            @page_title = t(:new, scope: plural_resource_name)
+            default_new_hook
           end
         end
 
@@ -142,14 +140,11 @@ module ActiveRecordController
           # Хук для страницы редактирования сущности
           # Устанавливает хлебную крошку страницы индекса, страницы создания и заголовок страницы по-умолчанию
           define_method(:edit_hook) do
-            add_breadcrumb t(:index, scope: plural_resource_name), :"#{plural_resource_name}_path"
-            add_breadcrumb t(:edit, scope: plural_resource_name)
-
-            @page_title = t(:edit, scope: plural_resource_name)
+            default_edit_hook
           end
         end
 
-        # Определяет экшен create
+        # Определяет экшен create (+ create_hook)
         def define_create_action
           # POST /object
           # POST /object.json
@@ -180,12 +175,14 @@ module ActiveRecordController
           end
         end
 
-        # Определяет экшен update
+        # Определяет экшен update (+ update_hook)
         def define_update_action
           # PUT /object/1
           # PUT /object/1.json
           define_method(:update) do
             @object = model.find(params[:id])
+
+            update_hook
 
             respond_to do |format|
               if @object.update(object_params)
@@ -200,20 +197,27 @@ module ActiveRecordController
               end
             end
           end
+
+          define_method(:update_hook) do
+          end
         end
 
-        # Определяет экшен destroy
+        # Определяет экшен destroy (+ destroy_hook)
         def define_destroy_action
           # DELETE /object/1
           # DELETE /object/1.json
           define_method(:destroy) do
             @object = model.find(params[:id])
+            destroy_hook
             @object.destroy
 
             respond_to do |format|
               format.html { redirect_to send("#{plural_resource_name}_url", role: params[:role]) }
               format.json { head :no_content }
             end
+          end
+
+          define_method(:destroy_hook) do
           end
         end
       end

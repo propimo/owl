@@ -3,3 +3,6 @@ en:
     saved: 'Saved'
     updated: 'Updated'
     error: 'Error'
+    delete: "Delete"
+    edit: "Edit"
+    show: "Show"
