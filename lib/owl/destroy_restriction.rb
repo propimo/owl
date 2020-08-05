@@ -2,7 +2,7 @@ module DestroyRestriction
   extend ActiveSupport::Concern
 
   module ClassMethods
-    attr_accessor :destroy_restrictions
+    attr_reader :destroy_restrictions
 
     # Запрещает удалять модель, если выполнится условие из коллбэка
     # @param [Proc, Symbol] if
@@ -10,19 +10,21 @@ module DestroyRestriction
     # @param [String, Proc] message сообщение, которое будет добавлено в ошибки (строка, либо лямбда, которая будет выполнена в контексте экземпляра класса)
     def restricts_destroy(if: -> { true }, attribute: '', message: 'Невозможно удалить объект')
       condition_callback = binding.local_variable_get(:if).to_proc
-      self.destroy_restrictions ||= []
       self.destroy_restrictions << { condition: condition_callback, message: message }
 
       before_destroy do
         errors.add(attribute, eval_restriction_message(message)) && throw(:abort) if exec_condition(condition_callback)
       end
     end
+
+    def destroy_restrictions
+      @destroy_restrictions ||= []
+    end
   end
 
   # Может ли объект быть удалён
   # @return [Boolean]
   def can_be_destroyed?
-    return true if self.class.destroy_restrictions.blank?
     self.class.destroy_restrictions.none? { |restriction| exec_condition(restriction[:condition]) }
   end
 
