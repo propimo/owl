@@ -161,7 +161,7 @@ module ActiveRecordController
                                      status: :created,
                                      location: @object }
               else
-                format.html { render action: "new" }
+                format.html { render action_path('new') rescue render 'active_record_controller/new' }
                 format.json { render json: { errors: @object.errors,
                                              notice: t('common.error') },
                                      status: :unprocessable_entity }
@@ -190,7 +190,7 @@ module ActiveRecordController
                 # format.json { render json: @object }
                 format.json { render json: { notice: t('common.updated') } }
               else
-                format.html { render action: "edit" }
+                format.html { render action_path('edit') rescue render 'active_record_controller/edit' }
                 format.json { render json: { errors: @object.errors,
                                              notice: t('common.error') },
                                      status: :unprocessable_entity }
